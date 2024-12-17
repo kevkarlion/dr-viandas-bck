@@ -7,7 +7,11 @@ module.exports = [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'connect-src': ["'self'", 'https://dr-viandas-bck-2.onrender.com'],
+          'connect-src': [
+            "'self'", 
+            'https://dr-viandas-bck-2.onrender.com',
+            'https://tu-frontend.com', // Asegúrate de incluir tu frontend de producción
+          ],
         },
       },
     },
@@ -16,7 +20,10 @@ module.exports = [
     name: 'strapi::cors',
     config: {
       enabled: true,
-      origin: ['http://localhost:3000'], // Permite tu frontend local
+      origin: [
+        'http://localhost:3000', // Permite tu frontend local
+        'https://tu-frontend.com', // Permite tu frontend de producción
+      ],
     },
   },
   'strapi::poweredBy',
