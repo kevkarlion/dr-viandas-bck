@@ -7,11 +7,8 @@ module.exports = [
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'connect-src': [
-            "'self'", 
-            'https://dr-viandas-bck-2.onrender.com',
-            'https://tu-frontend.com', // Asegúrate de incluir tu frontend de producción
-          ],
+          // De nuevo, no se incluye la URL porque no se tiene aún
+          'connect-src': ["'self'"], // Solo permite las conexiones al mismo origen por ahora
         },
       },
     },
@@ -20,10 +17,8 @@ module.exports = [
     name: 'strapi::cors',
     config: {
       enabled: true,
-      origin: [
-        'http://localhost:3000', // Permite tu frontend local
-        'https://tu-frontend.com', // Permite tu frontend de producción
-      ],
+      // Permite solicitudes desde tu frontend local mientras desarrollas
+      origin: ['http://localhost:3000'], // Reemplázalo después con la URL de tu despliegue
     },
   },
   'strapi::poweredBy',
