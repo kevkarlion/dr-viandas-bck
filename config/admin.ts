@@ -1,4 +1,6 @@
 export default ({ env }) => ({
+  tutorial: false,// Deshabilitar tutorial
+  notifications: { release: false},// Deshabilitar notificaciones de lanzamiento
   auth: {
     secret: env('ADMIN_JWT_SECRET'),
   },
