@@ -7,7 +7,8 @@ export default [
     config: {
       origin: [
         "https://mi-frontend-dominio.com", // Reemplaza con tu dominio frontend en producción
-        "http://localhost:3001", // Reemplaza si estás probando localmente
+        "http://localhost:3000",
+        "http://localhost:3001" // Reemplaza si estás probando localmente
       ],
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       headers: ["Content-Type", "Authorization"],
