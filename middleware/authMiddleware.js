@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 // Middleware para verificar el JWT en las rutas protegidas
 const protect = (req, res, next) => {
+  console.log('ruta de validacion de token')
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {

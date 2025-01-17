@@ -101,7 +101,7 @@ const login = async (req, res) => {
       id: cart._id,
       userId: cart.userId,
       items: cart.items.map(item => ({
-        dishId: item._id,
+        dishId: item.dishId,
         quantity: item.quantity,
         price: item.price,
         name: item.name
