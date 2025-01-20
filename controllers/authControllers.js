@@ -53,9 +53,10 @@ const signup = async (req, res) => {
       },
       cart: {
         id: cart._id, // Devolver el ID del carrito recién creado
+        userId: cart.userId,
         status: cart.status,
-        items: cart.items, // Mostrar carrito vacío por el momento
-        quantity: cart.items.length
+        items: cart.items // Mostrar carrito vacío por el momento
+
       }
     });
   } catch (error) {
@@ -100,6 +101,7 @@ const login = async (req, res) => {
     const formattedCart = cart ? {
       id: cart._id,
       userId: cart.userId,
+      status: cart.status,
       items: cart.items.map(item => ({
         dishId: item.dishId,
         quantity: item.quantity,
