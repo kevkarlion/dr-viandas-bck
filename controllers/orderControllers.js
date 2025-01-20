@@ -1,32 +1,57 @@
 const Order = require('../models/Order');
 
-// Controlador para obtener el carrito de compras
-const getCart = (req, res) => {
-  const userId = req.user._id; // El id del usuario viene del token
-  // Aquí puedes implementar lógica adicional si necesitas datos específicos
-  res.json({ message: 'Carrito de compras', userId });
-};
-
-// Controlador para hacer un pedido
-const createOrder = async (req, res) => {
-  const userId = req.user._id; // El id del usuario viene del token
-  const { items, totalAmount } = req.body;
-
+// Crear un nuevo pedido
+exports.createOrder = async (req, res) => {
   try {
+    const { userId, items, totalPrice } = req.body;
+
+    // Validar que los datos básicos estén presentes
+    if (!userId || !items || items.length === 0 || !totalPrice) {
+      return res.status(400).json({ error: 'Todos los campos son requeridos' });
+    }
+
+    // Crear un nuevo pedido
     const newOrder = new Order({
-      user: userId,
+      userId,
       items,
-      totalAmount,
-      status: 'pendiente',
+      totalPrice,
     });
-    await newOrder.save();
-    res.status(201).json({ message: 'Pedido realizado con éxito', order: newOrder });
+
+    // Guardar el pedido en la base de datos
+    const savedOrder = await newOrder.save();
+
+    return res.status(201).json({
+      message: 'Pedido registrado con éxito',
+      order: savedOrder,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error al crear el pedido', error });
+    console.error('Error al crear el pedido:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-module.exports = {
-  getCart,
-  createOrder,
+// Obtener todos los pedidos (opcional para gestión)
+exports.getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find().populate('userId', 'name email').populate('items.dishId');
+    return res.status(200).json(orders);
+  } catch (error) {
+    console.error('Error al obtener los pedidos:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+// Obtener un pedido por ID
+exports.getOrderById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id).populate('userId', 'name email').populate('items.dishId');
+    if (!order) {
+      return res.status(404).json({ error: 'Pedido no encontrado' });
+    }
+    return res.status(200).json(order);
+  } catch (error) {
+    console.error('Error al obtener el pedido:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
