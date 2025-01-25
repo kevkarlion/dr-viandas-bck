@@ -1,14 +1,19 @@
 const { createPreference } = require('../services/mercadoPagoServices');
 
 const createPayment = async (req, res) => {
-  const { items } = req.body;
 
-  if (!items || !items.length) {
+
+  const { body } = req.body;
+
+
+  console.log('items al servidor', req.body)
+
+  if (!body || !body.items || !body.items.length) {
     return res.status(400).json({ message: 'No se enviaron productos.' });
   }
 
   try {
-    const initPoint = await createPreference(items); // Llama a la función de creación de preferencia
+    const initPoint = await createPreference(req.body); // Llama a la función de creación de preferencia
     console.log('initPoint:', initPoint);
     res.status(200).json({ initPoint }); // Devuelve la URL para redirigir al usuario
   } catch (error) {
