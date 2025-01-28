@@ -1,7 +1,12 @@
+require('dotenv').config();
 const axios = require("axios");
 
 
-const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN
+const accessToken = 'APP_USR-1714622871403882-012222-b5670185cd096cf9e2ced6901aec57c0-189139543'
+
+console.log('acces token desde consultarPago', accessToken)
+
+
 
 const consultarPago = async (paymentId) => {
   try {
