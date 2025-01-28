@@ -13,9 +13,9 @@ const createPayment = async (req, res) => {
   }
 
   try {
-    const initPoint = await createPreference(req.body); // Llama a la función de creación de preferencia
-    console.log('initPoint:', initPoint);
-    res.status(200).json({ initPoint }); // Devuelve la URL para redirigir al usuario
+    const data = await createPreference(req.body); // Llama a la función de creación de preferencia
+    console.log('datos:', data);
+    res.status(200).json({ data }); // Devuelve la URL para redirigir al usuario
   } catch (error) {
     res.status(500).json({ message: 'Error al crear el pago.', error });
   }

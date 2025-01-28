@@ -17,7 +17,7 @@ const preference = new Preference(client);
    const response = await preference.create( body )
     
     console.log('Respuesta de la creación de preferencia:', response);
-    return { initPoint: response.init_point };
+    return { data: response };
    
   } catch(error)  {
       console.log('Respuesta del catch:', error);
