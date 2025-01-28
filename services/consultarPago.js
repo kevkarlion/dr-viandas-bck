@@ -1,7 +1,7 @@
 require("dotenv").config();
 const axios = require("axios");
 
-const accessToken = process.env.MP_ACCESS_TOKEN;
+const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
 
 console.log("acces token desde consultarPago", accessToken);
 
