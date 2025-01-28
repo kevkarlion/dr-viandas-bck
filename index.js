@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');  // Importar las rutas de aut
 const dishRoutes = require('./routes/dishRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const webhookRoutes = require('./routes/webhookRoutes');
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -29,7 +30,7 @@ app.get('/', (req, res) => {
 app.use('/api', dishRoutes);
 
 
-
+app.use('/api/webhook', webhookRoutes)
 app.use('/api/auth', authRoutes);  // Prefijo '/api/auth' para las rutas de login y signup
 app.use('/api/dish', dishRoutes);  // Prefijo '/api/dish' para las rutas de platillos
 app.use('/api/cart', cartRoutes);  // Prefijo '/api/cart' para las rutas de carrito
