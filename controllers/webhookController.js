@@ -5,6 +5,10 @@ const handleWebhook = async (req, res) => {
   try {
     const { type, data } = req.body;
 
+    console.log('req body',req.body)
+
+    console.log("Webhook recibido:", type, data);
+
     if (type === "payment") {
       const paymentId = data.id;
 
