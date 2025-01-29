@@ -6,6 +6,7 @@ const handleWebhook = async (req, res) => {
     const { type, data } = req.body;
 
     console.log('req body',req.body)
+    console.log('data id recibido',data.id)
 
     console.log("Webhook recibido:", type, data);
 

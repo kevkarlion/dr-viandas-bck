@@ -15,6 +15,7 @@ const consultarPago = async (paymentId) => {
         },
       }
     );
+    console.log("Pago consultado:", response.data);
     return response.data;
   } catch (error) {
     console.error(
