@@ -16,8 +16,12 @@ const handleWebhook = async (req, res) => {
       // Consulta los detalles del pago desde Mercado Pago
       const paymentDetails = await consultarPago(paymentId);
 
+      console.log("Detalles del pago:", paymentDetails);
+      
+
       // Obtén el ID de la orden desde el campo 'external_reference'
       const orderId = paymentDetails.external_reference;
+      console.log('orderId',orderId)
 
       // Prepara los datos para actualizar la orden
       const updateData = {
