@@ -27,10 +27,17 @@ const handleWebhook = async (req, res) => {
         return res.status(200).send("OK");
       }
 
+      // Calcular el totalPrice desde los items
+      const totalPrice = paymentDetails.additional_info.items.reduce(
+        (acc, item) => acc + (parseFloat(item.unit_price) * parseInt(item.quantity, 10)),
+        0
+      );
+
       // Crear una nueva orden con los detalles del pago
       const nuevaOrden = new Order({
         order_id: orderId, // Usar el order.id como identificador
         status: paymentDetails.status === "approved" ? "completed" : "pending",
+        totalPrice: totalPrice, // Asignar el totalPrice calculado
         paymentDetails: {
           id: paymentId,
           status: paymentDetails.status,
