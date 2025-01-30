@@ -4,26 +4,24 @@ const actualizarOrder = require("../controllers/actualizarOrder");
 const handleWebhook = async (req, res) => {
   try {
     const { type, data } = req.body;
-
-    console.log('req body',req.body)
-    console.log('data id recibido',data.id)
-
+    
     console.log("Webhook recibido:", type, data);
 
     if (type === "payment") {
       const paymentId = data.id;
 
-      // Consulta los detalles del pago desde Mercado Pago
+      // Consultar detalles del pago
       const paymentDetails = await consultarPago(paymentId);
-
       console.log("Detalles del pago:", paymentDetails);
+
+      // Obtener ID de la orden desde la respuesta (en lugar de external_reference)
+      const orderId = paymentDetails.order?.id; 
+      if (!orderId) {
+        console.error("No se encontró un orderId válido en la respuesta del pago.");
+        return res.status(400).json({ error: "No se encontró un orderId válido." });
+      }
       
-
-      // Obtén el ID de la orden desde el campo 'external_reference'
-      const orderId = paymentDetails.external_reference;
-      console.log('orderId',orderId)
-
-      // Prepara los datos para actualizar la orden
+      // Preparar los datos a actualizar en la orden
       const updateData = {
         status: paymentDetails.status === "approved" ? "completed" : "pending",
         paymentDetails: {
@@ -33,16 +31,27 @@ const handleWebhook = async (req, res) => {
           transactionAmount: paymentDetails.transaction_amount,
           dateApproved: paymentDetails.date_approved,
         },
+        payer: {
+          email: paymentDetails.payer?.email || "No especificado",
+          id: paymentDetails.payer?.id || "No especificado",
+          identification: paymentDetails.payer?.identification || {},
+        },
+        items: paymentDetails.additional_info.items.map(item => ({
+          name: item.title,
+          quantity: parseInt(item.quantity, 10),
+          price: parseFloat(item.unit_price),
+        })),
         updatedAt: new Date(),
       };
 
-      // Actualiza la orden en la base de datos
+      // Actualizar la orden en la base de datos
       const updatedOrder = await actualizarOrder(orderId, updateData);
+      console.log("Orden actualizada:", updatedOrder);
 
-      console.log("Orden actualizada tras el pago:", updatedOrder);
+      return res.status(200).send("OK");
     }
 
-    res.status(200).send("OK");
+    res.status(200).send("Evento recibido");
   } catch (error) {
     console.error("Error procesando el webhook:", error.message);
     res.status(500).send("Error interno del servidor.");

@@ -4,7 +4,6 @@ const orderSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   items: [
     {
-      dishId: { type: mongoose.Schema.Types.ObjectId, ref: "Dish", required: true },
       name: { type: String, required: true },
       quantity: { type: Number, required: true },
       price: { type: Number, required: true },
@@ -18,6 +17,14 @@ const orderSchema = new mongoose.Schema({
     method: { type: String },
     transactionAmount: { type: Number },
     dateApproved: { type: Date },
+  },
+  payer: {
+    email: { type: String },
+    id: { type: String },
+    identification: {
+      type: { type: String },
+      number: { type: String },
+    },
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date },
