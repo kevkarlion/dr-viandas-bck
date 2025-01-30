@@ -1,28 +1,35 @@
 const consultarPago = require("../services/consultarPago");
-const actualizarOrder = require("../controllers/actualizarOrder");
+const Order = require("../models/OrderModel");
 
 const handleWebhook = async (req, res) => {
   try {
     const { type, data } = req.body;
-    
     console.log("Webhook recibido:", type, data);
 
     if (type === "payment") {
       const paymentId = data.id;
 
-      // Consultar detalles del pago
+      // Consultar detalles del pago en MercadoPago
       const paymentDetails = await consultarPago(paymentId);
       console.log("Detalles del pago:", paymentDetails);
 
-      // Obtener ID de la orden desde la respuesta (en lugar de external_reference)
-      const orderId = paymentDetails.order?.id; 
+      // Obtener el orderId desde la respuesta de pago (order.id)
+      const orderId = paymentDetails.order?.id;
       if (!orderId) {
-        console.error("No se encontró un orderId válido en la respuesta del pago.");
+        console.error("No se encontró un orderId válido.");
         return res.status(400).json({ error: "No se encontró un orderId válido." });
       }
-      
-      // Preparar los datos a actualizar en la orden
-      const updateData = {
+
+      // Verificar si la orden ya existe para evitar duplicados
+      const existingOrder = await Order.findOne({ order_id: orderId });
+      if (existingOrder) {
+        console.log("⚠️ La orden ya existe, ignorando.");
+        return res.status(200).send("OK");
+      }
+
+      // Crear una nueva orden con los detalles del pago
+      const nuevaOrden = new Order({
+        order_id: orderId, // Usar el order.id como identificador
         status: paymentDetails.status === "approved" ? "completed" : "pending",
         paymentDetails: {
           id: paymentId,
@@ -41,19 +48,20 @@ const handleWebhook = async (req, res) => {
           quantity: parseInt(item.quantity, 10),
           price: parseFloat(item.unit_price),
         })),
+        createdAt: new Date(),
         updatedAt: new Date(),
-      };
+      });
 
-      // Actualizar la orden en la base de datos
-      const updatedOrder = await actualizarOrder(orderId, updateData);
-      console.log("Orden actualizada:", updatedOrder);
+      // Guardar la nueva orden en la base de datos
+      await nuevaOrden.save();
+      console.log("✅ Nueva orden creada:", nuevaOrden);
 
       return res.status(200).send("OK");
     }
 
     res.status(200).send("Evento recibido");
   } catch (error) {
-    console.error("Error procesando el webhook:", error.message);
+    console.error("❌ Error procesando el webhook:", error.message);
     res.status(500).send("Error interno del servidor.");
   }
 };

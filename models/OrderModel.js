@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  order_id: { type: String, required: true, unique: true }, // Nuevo campo order_id
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }, // Relación con usuario (opcional si no está disponible)
   items: [
     {
       name: { type: String, required: true },
@@ -27,7 +28,7 @@ const orderSchema = new mongoose.Schema({
     },
   },
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Order", orderSchema);
