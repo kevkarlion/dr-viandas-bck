@@ -2,11 +2,11 @@ require('dotenv').config();
 
 
 const authRoutes = require('./routes/authRoutes');  // Importar las rutas de autenticación
-
 const dishRoutes = require('./routes/dishRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const webhookRoutes = require('./routes/webhookRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -35,6 +35,7 @@ app.use('/api/auth', authRoutes);  // Prefijo '/api/auth' para las rutas de logi
 app.use('/api/dish', dishRoutes);  // Prefijo '/api/dish' para las rutas de platillos
 app.use('/api/cart', cartRoutes);  // Prefijo '/api/cart' para las rutas de carrito
 app.use('/api/payments', paymentRoutes); // Prefijo '/api' para las rutas de pagos
+app.use('api/order', orderRoutes); // Prefijo '/api' para las rutas de pedidos
 
 // Middleware de manejo de errores
 app.use((err, req, res, next) => {

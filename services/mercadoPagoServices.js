@@ -10,12 +10,7 @@ const preference = new Preference(client);
  const createPreference = async (body)=> {
   try{
     console.log('Items desde servicio:', body);
-
-
-
-
-   const response = await preference.create( body )
-    
+    const response = await preference.create( body )
     console.log('Respuesta de la creación de preferencia:', response);
     return { data: response };
    

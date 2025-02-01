@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-  order_id: { type: String, required: true, unique: true }, // Nuevo campo order_id
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }, // Relación con usuario (opcional si no está disponible)
+  order_id: { type: String, unique: true }, // ID único de la orden
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Ya no es obligatorio
   items: [
     {
-      name: { type: String, required: true },
-      quantity: { type: Number, required: true },
-      price: { type: Number, required: true },
+      name: { type: String },
+      quantity: { type: Number },
+      price: { type: Number },
     },
   ],
-  totalPrice: { type: Number, required: true },
-  status: { type: String, default: "pending" }, // pending, completed, etc.
+  totalPrice: { type: Number }, // Ya no es obligatorio
+  status: { type: String, enum: ["pending", "completed", "cancelled"], default: "pending" },
   paymentDetails: {
     id: { type: String },
     status: { type: String },
@@ -20,7 +20,7 @@ const orderSchema = new mongoose.Schema({
     dateApproved: { type: Date },
   },
   payer: {
-    email: { type: String },
+    email: { type: String }, // Ya no es obligatorio
     id: { type: String },
     identification: {
       type: { type: String },
@@ -29,6 +29,12 @@ const orderSchema = new mongoose.Schema({
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+});
+
+// Middleware para actualizar `updatedAt` antes de guardar cambios
+orderSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
 module.exports = mongoose.model("Order", orderSchema);
