@@ -14,18 +14,26 @@ const handleWebhook = async (req, res) => {
       const paymentDetails = await consultarPago(paymentId);
       console.log("Detalles del pago:", paymentDetails);
       
+      
+
       const orderId = paymentDetails.order?.id;
       if (!orderId) {
         console.error("No se encontró un orderId válido.");
         return res.status(400).json({ error: "No se encontró un orderId válido." });
       }
       
-      const userId = paymentDetails.metadata?.userId;
+
+      console.log('userId',paymentDetails.metadata?.user_id)
+
+      const userId = paymentDetails.metadata?.user_id;
       if (!userId) {
         console.error("No se encontró un userId en metadata.");
         return res.status(400).json({ error: "No se encontró un userId en metadata." });
       }
+
       
+
+      //si la orden ya existe, actualiza el estado de la orden
       const existingOrder = await Order.findOne({ order_id: orderId });
       if (existingOrder) {
         console.log("⚠️ La orden ya existe, actualizando.");
@@ -67,6 +75,8 @@ const handleWebhook = async (req, res) => {
         0
       );
       
+
+      // Crear una nueva orden
       const nuevaOrden = new Order({
         order_id: orderId,
         status: paymentDetails.status === "approved" ? "completed" : "pending",
