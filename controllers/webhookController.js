@@ -7,7 +7,7 @@ const handleWebhook = async (req, res) => {
     const { type, data } = req.body;
     console.log('respuesta del webhook',req.body)
     console.log("Webhook recibido:", type, data);
-    console.log('id',req.body.id)
+    console.log('id',req.body.data.id)
 
     if (type === "payment") {
       const paymentId = req.body.data.id;
