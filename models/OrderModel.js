@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
   order_id: { type: String, unique: true }, // ID único de la orden
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Ya no es obligatorio
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true, // Esto obliga a que siempre tenga un usuario
+  }, // Ya no es obligatorio
   items: [
     {
       name: { type: String },
