@@ -7,9 +7,10 @@ const handleWebhook = async (req, res) => {
     const { type, data } = req.body;
     console.log('respuesta del webhook',req.body)
     console.log("Webhook recibido:", type, data);
+    console.log('id',req.id)
 
     if (type === "payment") {
-      const paymentId = data.id;
+      const paymentId = req.id;
       
       // Consultar detalles del pago en MercadoPago
       const paymentDetails = await consultarPago(paymentId);
