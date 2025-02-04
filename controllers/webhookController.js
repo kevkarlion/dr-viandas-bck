@@ -33,6 +33,9 @@ const handleWebhook = async (req, res) => {
         return res.status(400).json({ error: "No se encontró un userId en metadata." });
       }
 
+      const userObjectId = new mongoose.Types.ObjectId(userId);
+
+
       
 
       //si la orden ya existe, actualiza el estado de la orden
@@ -63,7 +66,7 @@ const handleWebhook = async (req, res) => {
                 id: paymentDetails.payer?.id || "No especificado",
                 identification: paymentDetails.payer?.identification || {},
               },
-              user: userId,
+              user: userObjectId,
               updatedAt: new Date(),
             }
           }
@@ -100,7 +103,7 @@ const handleWebhook = async (req, res) => {
           quantity: parseInt(item.quantity, 10),
           price: parseFloat(item.unit_price),
         })),
-        user: userId, // Relación con la tabla User
+        user: userObjectId, // Relación con la tabla User
         createdAt: new Date(),
         updatedAt: new Date(),
       });
