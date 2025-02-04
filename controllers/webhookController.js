@@ -5,6 +5,7 @@ const User = require("../models/User");
 const handleWebhook = async (req, res) => {
   try {
     const { type, data } = req.body;
+    console.log('respuesta del webhook',req.body)
     console.log("Webhook recibido:", type, data);
 
     if (type === "payment") {
