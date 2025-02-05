@@ -16,6 +16,10 @@ const dishSchema = new mongoose.Schema({
     type: String,
     required: true,  // La descripción es obligatoria
   },
+  date: {
+    type: String,
+    required: true,  // El nombre es obligatorio
+  },
   available: {
     type: Boolean,
     default: true,  // Por defecto, la vianda está disponible
